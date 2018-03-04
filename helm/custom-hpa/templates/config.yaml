@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: custom-hpa
+data:
+  config.yaml: |-
+{{ toYaml .Values.config | indent 8 }}

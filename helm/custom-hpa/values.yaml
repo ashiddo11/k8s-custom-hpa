@@ -1,0 +1,11 @@
+image: custom-hpa
+tag: latest
+imagePullPolicy: Never
+environment: []
+config:
+  apps:
+    - name: hello-world
+      maxReplicas: 5
+      minReplicas: 1
+      scaleFactor: 2
+      query: aws_sqs_approximate_number_of_messages_visible_average{queue_name="notifications-dead"} > 35
