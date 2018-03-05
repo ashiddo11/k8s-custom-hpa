@@ -14,6 +14,7 @@ type config struct {
 		ScaleFactor int32 `yaml:"scaleFactor"`
 		MaxReplicas int32 `yaml:"maxReplicas"`
 		MinReplicas int32 `yaml:"minReplicas"`
+		Namespace	string `yaml:"namespace"`
 	} `yaml:"apps"`
 }
 

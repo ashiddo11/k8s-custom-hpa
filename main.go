@@ -41,9 +41,9 @@ func main() {
 
         for {
                 appConfig, _ := conf.LoadConfig()
-                deploymentsClient := clientset.ExtensionsV1beta1().Deployments("default")
                 for _, app := range appConfig.Apps {
                         log.Printf("Checking %s", app.Name)
+                        deploymentsClient := clientset.ExtensionsV1beta1().Deployments(app.Namespace)
                         deploymentScale, err := deploymentsClient.GetScale(app.Name, v1.GetOptions{})
                         if err != nil {
                                 log.Println("[WARNING]", err)
