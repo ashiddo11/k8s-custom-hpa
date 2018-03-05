@@ -65,7 +65,7 @@ func main() {
                                 log.Printf("No need to scale")
                         }
                 }
-                time.Sleep(45 * time.Second)
+                time.Sleep(120 * time.Second)
 
         }
 }
