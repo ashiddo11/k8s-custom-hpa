@@ -2,11 +2,14 @@ package util
 
 import (
         "encoding/json"
+        "k8s.io/client-go/kubernetes"
         "io/ioutil"
         "log"
         "net/http"
         "os"
+        v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
         "time"
+        v1beta1 "k8s.io/api/extensions/v1beta1"
 )
 
 type queryResponse struct {
@@ -36,8 +39,46 @@ func getEnv(key, fallback string) string {
         return fallback
 }
 
+func getNamespaces(client *kubernetes.Clientset) (vpcs []string) {
+        namespaces, _ := client.Core().Namespaces().List(v1.ListOptions{})
+        for _, ns := range namespaces.Items {
+                vpcs = append(vpcs, ns.ObjectMeta.Name)
+        }
+        return
+}
+
+func GetDeployment(client *kubernetes.Clientset, deployment string) (deploymentScale *v1beta1.Scale, vpcFound string) {
+        vpcs := getNamespaces(client)
+        for _, vpc := range vpcs {
+                deploymentsClient := client.ExtensionsV1beta1().Deployments(vpc)
+                scale, err := deploymentsClient.GetScale(deployment, v1.GetOptions{})
+                if err != nil {
+                        log.Printf("%+v", err)
+                } else {
+                        vpcFound = vpc
+                        deploymentScale = scale
+                        break
+                }
+        }
+        return
+}
+
+func ScaleDeployment(client *kubernetes.Clientset, vpc string, deployment string, deploymentConfig *v1beta1.Scale) (result *v1beta1.Scale) {
+        deploymentsClient := client.ExtensionsV1beta1().Deployments(vpc)
+        result, err := deploymentsClient.UpdateScale(deployment, deploymentConfig)
+        if err != nil {
+                log.Printf(err.Error())
+        }
+
+        if err == nil {
+                log.Printf("Scaled %s to %d replicas" , deployment ,result.Spec.Replicas)
+        }
+        return
+}
+
 func apiCall(query string) (response *queryResponse) {
-        promEP := getEnv("PROM_ENDPOINT", "prometheus:9090")
+        promEP := getEnv("PROM_ENDPOINT", "192.168.99.100:30900")
+        log.Printf(promEP)
         url := "http://" + promEP + "/api/v1/query"
 
         client := http.Client{
@@ -81,6 +122,5 @@ func CheckMetric(query string) (triggered bool) {
                 log.Printf("Metric found")
                 triggered = true
         }
-
         return
 }
