@@ -5,25 +5,11 @@ import (
         "log"
         "time"
         "k8s.io/client-go/rest"
-        v1beta1 "k8s.io/api/extensions/v1beta1"
-        extv1 "k8s.io/client-go/kubernetes/typed/extensions/v1beta1"
         conf "github.com/ashiddo11/k8s-custom-hpa/config"
         "github.com/ashiddo11/k8s-custom-hpa/util"
+        "strconv"
         "math"
 )
-
-func scale(client extv1.DeploymentInterface, deployment string, deploymentConfig *v1beta1.Scale) (result *v1beta1.Scale) {
-
-        result, err := client.UpdateScale(deployment, deploymentConfig)
-        if err != nil {
-                log.Printf(err.Error())
-        }
-
-        if err == nil {
-                log.Printf("Scaled %s to %d replicas" , deployment ,result.Spec.Replicas)
-        }
-        return
-}
 
 func main() {
 
@@ -59,7 +45,8 @@ func main() {
                                 log.Printf("No need to scale")
                         }
                 }
-                time.Sleep(120 * time.Second)
-
+                checkInterval, _ := strconv.Atoi(util.GetEnv("CHECK_INTERVAL", "120"))
+                interval := time.Duration(checkInterval)
+                time.Sleep(interval * time.Second)
         }
 }

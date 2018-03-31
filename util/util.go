@@ -31,7 +31,7 @@ type queryResponse struct {
                } `json:"data"`
 }
 
-func getEnv(key, fallback string) string {
+func GetEnv(key, fallback string) string {
         if value, ok := os.LookupEnv(key); ok {
                 return value
         }
@@ -77,7 +77,7 @@ func ScaleDeployment(client *kubernetes.Clientset, vpc string, deployment string
 }
 
 func apiCall(query string) (response *queryResponse) {
-        promEP := getEnv("PROM_ENDPOINT", "192.168.99.100:30900")
+        promEP := GetEnv("PROM_ENDPOINT", "192.168.99.100:30900")
         log.Printf(promEP)
         url := "http://" + promEP + "/api/v1/query"
 
