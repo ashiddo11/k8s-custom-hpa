@@ -77,7 +77,7 @@ func ScaleDeployment(client *kubernetes.Clientset, vpc string, deployment string
 }
 
 func apiCall(query string) (response *queryResponse) {
-        promEP := GetEnv("PROM_ENDPOINT", "192.168.99.100:30900")
+        promEP := GetEnv("PROM_ENDPOINT", "prometheus:9090")
         log.Printf(promEP)
         url := "http://" + promEP + "/api/v1/query"
 
