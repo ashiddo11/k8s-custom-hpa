@@ -1,4 +1,4 @@
-# k8s-custom-hpa
+# Kubernetes custom HPA using prometheus
 Kubernetes HPA using prometheus queries
 
 ## Configuration
