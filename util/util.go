@@ -94,6 +94,7 @@ func apiCall(query string) (response *queryResponse) {
         res, err := client.Do(req)
         if err != nil {
                 log.Printf("error %s", err)
+                return nil
         }
 
         body, readErr := ioutil.ReadAll(res.Body)
@@ -115,12 +116,14 @@ func apiCall(query string) (response *queryResponse) {
 
 func CheckMetric(query string) (triggered bool) {
         response := apiCall(query)
-        if len(response.Data.Result) == 0 {
-                log.Printf("Query not matched")
-                triggered = false
-        } else {
-                log.Printf("Metric found")
-                triggered = true
+        if response != nil {
+                if len(response.Data.Result) == 0 {
+                        log.Printf("Query not matched")
+                        triggered = false
+                } else {
+                        log.Printf("Metric found")
+                        triggered = true
+                }
         }
         return
 }
