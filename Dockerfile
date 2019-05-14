@@ -1,4 +1,4 @@
-FROM golang:1.10
+FROM golang:latest
 
 WORKDIR /go/src/github.com/ashiddo11/k8s-custom-hpa/
 

@@ -29,6 +29,9 @@ func main() {
                 for _, app := range appConfig.Apps {
                         log.Printf("Checking %s", app.Name)
                         deploymentScale, ns := util.GetDeployment(clientset, app.Name)
+                        if deploymentScale == nil {
+                            break
+                        }
                         triggered := util.CheckMetric(app.Query)
                         switch {
                         case triggered && deploymentScale.Spec.Replicas < app.MaxReplicas:
