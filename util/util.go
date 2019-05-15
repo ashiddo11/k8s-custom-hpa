@@ -40,7 +40,7 @@ func GetEnv(key, fallback string) string {
 }
 
 func getNamespaces(client *kubernetes.Clientset) (vpcs []string) {
-        namespaces, _ := client.Core().Namespaces().List(v1.ListOptions{})
+        namespaces, _ := client.CoreV1().Namespaces().List(v1.ListOptions{})
         for _, ns := range namespaces.Items {
                 vpcs = append(vpcs, ns.ObjectMeta.Name)
         }
