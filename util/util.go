@@ -52,10 +52,9 @@ func GetDeployment(client *kubernetes.Clientset, deployment string) (deploymentS
         for _, vpc := range vpcs {
                 deploymentsClient := client.ExtensionsV1beta1().Deployments(vpc)
                 scale, err := deploymentsClient.GetScale(deployment, v1.GetOptions{})
-                if err != nil {
-                        log.Printf("%+v", err)
-                } else {
+                if err == nil {
                         vpcFound = vpc
+                        log.Printf("Found %s in %s namespace", deployment, vpcFound)
                         deploymentScale = scale
                         break
                 }
@@ -78,7 +77,6 @@ func ScaleDeployment(client *kubernetes.Clientset, vpc string, deployment string
 
 func apiCall(query string) (response *queryResponse) {
         promEP := GetEnv("PROM_ENDPOINT", "prometheus:9090")
-        log.Printf(promEP)
         url := "http://" + promEP + "/api/v1/query"
 
         client := http.Client{
