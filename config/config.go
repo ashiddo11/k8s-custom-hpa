@@ -9,12 +9,13 @@ import (
 
 type config struct {
 	Apps []struct {
-		Name   string `yaml:"name"`
-		Query  string `yaml:"query"`
-		ScaleFactor int32 `yaml:"scaleFactor"`
-		MaxReplicas int32 `yaml:"maxReplicas"`
-		MinReplicas int32 `yaml:"minReplicas"`
-		Namespace	string `yaml:"namespace"`
+		Name        string `yaml:"name"`
+		Query       string `yaml:"query"`
+		ScaleFactor int32  `yaml:"scaleFactor"`
+		MaxReplicas int32  `yaml:"maxReplicas"`
+		MinReplicas int32  `yaml:"minReplicas"`
+		Namespace   string `yaml:"namespace"`
+		Stackdriver bool   `yaml:"stackdriver"`
 	} `yaml:"apps"`
 }
 

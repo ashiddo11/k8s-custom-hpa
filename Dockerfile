@@ -2,7 +2,11 @@ FROM golang:latest
 
 WORKDIR /go/src/github.com/ashiddo11/k8s-custom-hpa/
 
-RUN go get gopkg.in/yaml.v2  k8s.io/client-go/... 
+RUN go get gopkg.in/yaml.v2 \
+    k8s.io/client-go/...  \
+    google.golang.org/genproto/googleapis/monitoring/v3 \
+    cloud.google.com/go/monitoring/apiv3 \
+    github.com/PaesslerAG/gval
 
 COPY .  .
 
